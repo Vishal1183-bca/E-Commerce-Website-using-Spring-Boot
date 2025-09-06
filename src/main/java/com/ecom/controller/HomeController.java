@@ -17,9 +17,16 @@ public class HomeController
 	public String login() {
 		return "login";
 	}
-	@GetMapping("register")
+	@GetMapping("/register")
 	public String register()
 	{
 		return "register";
 	}
+	
+	@GetMapping("/product")
+	public String product()
+	{
+		return "product";
+	}
+	
 }
