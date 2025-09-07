@@ -22,6 +22,7 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.util.ObjectUtils;
 
 import com.ecom.model.Category;
+import com.ecom.model.Product;
 import com.ecom.repository.CategoryRepository;
 import com.ecom.service.CategoryService;
 import com.ecom.service.ProductService;
@@ -53,8 +54,9 @@ public class AdminController {
     }
     
    @GetMapping("/loadAddProduct")
-    public String loadAddProduct() 
+    public String loadAddProduct(Model model) 
     {
+        model.addAttribute("categories", categoryService.getAllCategory());
         return "admin/add_product";
     }
        @GetMapping("/category")
@@ -151,5 +153,72 @@ public class AdminController {
         return "redirect:/admin/loadEditCategory/"+category.getId();
     }
     
+    @PostMapping("/saveProduct")
+    public String saveProduct(@ModelAttribute Product product,@RequestParam("file") MultipartFile image,HttpSession session) throws IOException
+    {
+        String imageName = image.isEmpty() ? "default.jpg" : image.getOriginalFilename();
+        product.setImage(imageName);
+        Product saveProduct = productService.saveProduct(product);
+        if(!ObjectUtils.isEmpty(saveProduct))
+        {
+            File saveFile = new ClassPathResource("static/img").getFile();
+            Path path = Paths.get(saveFile.getAbsolutePath() + File.separator + "product_img" + File.separator + image.getOriginalFilename());
+            Files.copy(image.getInputStream(), path,StandardCopyOption.REPLACE_EXISTING);
+            session.setAttribute("succMsg", "Product Save Successfully");
+        }
+        else{
+            session.setAttribute("errorMsg", "Something wrong on server");
+        }
+        return "redirect:/admin/loadAddProduct";
+    }
+       
+    @GetMapping("/products")
+    public String loadViewProduct(Model m)
+    {
+        m.addAttribute("products", productService.getAllProducts());
+        return "admin/products";
+    }
+    
+
+
+    @GetMapping("/deleteProduct/{id}")
+    public String deleteProduct(@PathVariable int id,HttpSession session){
+        Boolean deleteProduct = productService.deletProduct(id);
+        if(deleteProduct)
+        {
+            session.setAttribute("succMsg", "Product delete Successfully");
+        }
+        else{
+            session.setAttribute("errorMsg", "Something wrong on server");
+        }
+        return "redirect:/admin/products";
+    }
+
+    @GetMapping("/loadEditProduct/{id}")
+    public String editProduct(@PathVariable int id,Model m)
+    {
+        m.addAttribute("product", productService.getProductById(id));
+        m.addAttribute("categories", categoryService.getAllCategory());
+        return "admin/edit_product";
+    }
+
+
+    @PostMapping("/updateProduct")
+    
+        public String updateProduct(@ModelAttribute Product product,@RequestParam("file") MultipartFile image,HttpSession session) throws IOException{
+
+            Product updateProduct = productService.updateProduct(product, image);
+            if(!ObjectUtils.isEmpty(updateProduct))
+            {
+                session.setAttribute("succMsg", "Product Update Successfully");
+            }
+            else{
+                session.setAttribute("errorMsg", "Something wrong on server");
+            }
+            return "redirect:/admin/loadEditProduct/"+product.getId();
+        }
+    
+
+
     
 }
