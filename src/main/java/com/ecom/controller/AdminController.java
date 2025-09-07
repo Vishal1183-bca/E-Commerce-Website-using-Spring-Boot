@@ -1,15 +1,51 @@
 package com.ecom.controller;
 
+import java.io.IOException;
+import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.nio.file.StandardCopyOption;
+import java.util.List;
+import java.io.IOException;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.ClassPathResource;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.multipart.MultipartFile;
+import org.springframework.util.ObjectUtils;
+
+import com.ecom.model.Category;
+import com.ecom.repository.CategoryRepository;
+import com.ecom.service.CategoryService;
+import com.ecom.service.ProductService;
+
+import org.springframework.ui.Model;
+import jakarta.servlet.http.HttpSession;
 
 
 @Controller
 @RequestMapping("/admin")
-public class AdminController 
-{
+public class AdminController {
+
+    private final CategoryRepository categoryRepository;
+
+    @Autowired
+    CategoryService categoryService;
+    
+    @Autowired
+    ProductService productService;
+
+    AdminController(CategoryRepository categoryRepository) {
+        this.categoryRepository = categoryRepository;
+    }
+
     @GetMapping("/")
     public String admin() 
     {
@@ -27,6 +63,64 @@ public class AdminController
         return "admin/category";
     }
     
+    @GetMapping("/saveCategory")
+    public String saveCategory(@ModelAttribute Category category,@RequestParam("file") MultipartFile file,HttpSession session) throws IOException
+
     
+    {
+       String imageName = file != null ? file.getOriginalFilename() : "default.jpg";
+       category.setImageName(imageName);
+       Boolean existCategory = categoryService.existCategory(category.getName());
+       if(existCategory)
+       {
+        session.setAttribute("errorMsg", "Category Name already exists");
+       }
+       else{
+            Category saveCategory = categoryService.saveCategory(category);
+            if(ObjectUtils.isEmpty(saveCategory))
+            {
+                session.setAttribute("errorMsg", "Not Saved ! internal server error");
+            }
+            else{
+                File saveFile = new ClassPathResource("static/img").getFile();
+                Path path = Paths.get(saveFile.getAbsolutePath() + File.separator + "category_img" + File.separator + file.getOriginalFilename());
+                Files.copy(file.getInputStream(), path,StandardCopyOption.REPLACE_EXISTING);
+                session.setAttribute("succMsg","Save Successfully");
+            }
+        }
+        return "redirect:/admin/category";
+    }
+    
+
+
+    @GetMapping("/deleteCategory/{id}")
+    public String deleteCategory(@PathVariable int id,HttpSession session)
+    {
+        Boolean deleteCategory = categoryService.deleteCategory(id);
+        if(deleteCategory)
+        {
+            session.setAttribute("succMsg", "category delete Successfully");
+        }
+        else{
+            session.setAttribute("errorMsg", "Something wrong on server");
+        }
+        return "redirect:/admin/category";
+    }
+  
+
+    @GetMapping("/loadEditCategory/{id}")
+    public String loadEditCategory(@PathVariable int id, Model m)
+    {
+        m.addAttribute("categoty",categoryService.getCategoryById(id));
+        return "admin/edit_category";
+    }
+    
+
+    @PostMapping("/updateCategory")
+    {
+        public String updateCategory(@ModelAttribute Category category,@RequestParam("file") MultipartFile file,HttpSession session) throws IOException {
+
+        }
+    }
     
 }
