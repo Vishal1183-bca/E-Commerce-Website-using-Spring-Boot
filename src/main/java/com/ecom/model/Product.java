@@ -5,15 +5,7 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
 
-@NoArgsConstructor
-@AllArgsConstructor
-@Getter
-@Setter
 @Entity
 public class Product {
     @Id
@@ -27,4 +19,37 @@ public class Product {
     private Double price;
     private int stock;
     private String image;
+    
+    public Product() {}
+    
+    public Product(int id, String title, String description, String category, Double price, int stock, String image) {
+        this.id = id;
+        this.title = title;
+        this.description = description;
+        this.category = category;
+        this.price = price;
+        this.stock = stock;
+        this.image = image;
+    }
+    
+    public int getId() { return id; }
+    public void setId(int id) { this.id = id; }
+    
+    public String getTitle() { return title; }
+    public void setTitle(String title) { this.title = title; }
+    
+    public String getDescription() { return description; }
+    public void setDescription(String description) { this.description = description; }
+    
+    public String getCategory() { return category; }
+    public void setCategory(String category) { this.category = category; }
+    
+    public Double getPrice() { return price; }
+    public void setPrice(Double price) { this.price = price; }
+    
+    public int getStock() { return stock; }
+    public void setStock(int stock) { this.stock = stock; }
+    
+    public String getImage() { return image; }
+    public void setImage(String image) { this.image = image; }
 }

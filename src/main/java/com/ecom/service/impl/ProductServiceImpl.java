@@ -18,6 +18,7 @@ import com.ecom.model.Product;
 import com.ecom.repository.ProductRepository;
 import com.ecom.service.ProductService;
 
+@Service
 public class ProductServiceImpl implements ProductService {
 
 
