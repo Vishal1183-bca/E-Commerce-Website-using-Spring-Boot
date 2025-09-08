@@ -158,6 +158,8 @@ public class AdminController {
     {
         String imageName = image.isEmpty() ? "default.jpg" : image.getOriginalFilename();
         product.setImage(imageName);
+        product.setDiscount(0);
+        product.discountedPrice(product.getPrice());
         Product saveProduct = productService.saveProduct(product);
         if(!ObjectUtils.isEmpty(saveProduct))
         {

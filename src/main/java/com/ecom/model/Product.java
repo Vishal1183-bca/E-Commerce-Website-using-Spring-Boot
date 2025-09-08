@@ -18,12 +18,14 @@ public class Product {
     private String category;
     private Double price;
     private int stock;
+    private int discount;
+    private Double discountedPrice;
     private String image;
-    private Double discount = 0.0;
+   
     
     public Product() {}
     
-    public Product(int id, String title, String description, String category, Double price, int stock, String image, Double discount) {
+    public Product(int id, String title, String description, String category, Double price, int stock, String image, int discount, Double discountedPrice) {
         this.id = id;
         this.title = title;
         this.description = description;
@@ -32,6 +34,7 @@ public class Product {
         this.stock = stock;
         this.image = image;
         this.discount = discount;
+        this.discountedPrice = discountedPrice;
     }
     
     public int getId() { return id; }
@@ -47,6 +50,20 @@ public class Product {
     public void setCategory(String category) { this.category = category; }
     
     public Double getPrice() { return price; }
+    public void setDiscount(int discount) {
+        this.discount = discount;
+    }
+    public int getDiscount() {
+        return discount;
+    }
+
+    public Double getDiscountedPrice() {
+        return discountedPrice;
+    }
+    public void setDiscountedPrice(Double discountedPrice) {
+        this.discountedPrice = discountedPrice;
+    }
+
     public void setPrice(Double price) { this.price = price; }
     
     public int getStock() { return stock; }
@@ -55,6 +72,5 @@ public class Product {
     public String getImage() { return image; }
     public void setImage(String image) { this.image = image; }
     
-    public Double getDiscount() { return discount; }
-    public void setDiscount(Double discount) { this.discount = discount; }
+    
 }

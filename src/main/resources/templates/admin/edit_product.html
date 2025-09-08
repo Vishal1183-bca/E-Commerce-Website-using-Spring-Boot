@@ -52,6 +52,24 @@
 									<label>Enter Price</label> <input type="number" name="price"
 										th:value="${product.price}" class="form-control">
 								</div>
+
+
+
+								<div class="row">
+									<div class="mb-3 col">
+										<label>Enter Discount (%)</label> <input type="number"
+											name="discount" th:value="${product.discount}"
+											class="form-control">
+									</div>
+									
+									<div class="mb-3 col">
+										<label>Discounted Price</label> 
+										<input type="number"  th:value="${product.discountedPrice}" class="form-control" readonly>
+									</div>
+								</div>
+
+
+
 								<div class="row">
 
 									<div class="mb-3 col">
