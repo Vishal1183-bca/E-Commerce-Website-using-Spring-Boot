@@ -13,5 +13,6 @@ public interface ProductService
     public Boolean deletProduct(Integer id);
     public Product getProductById(Integer id);
     public Product updateProduct(Product product,MultipartFile file);
+    public List<Product> getAllActiveProducts(String category);
     
 }

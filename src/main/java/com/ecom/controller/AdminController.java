@@ -159,7 +159,7 @@ public class AdminController {
         String imageName = image.isEmpty() ? "default.jpg" : image.getOriginalFilename();
         product.setImage(imageName);
         product.setDiscount(0);
-        product.discountedPrice(product.getPrice());
+        product.setDiscountedPrice(product.getPrice());
         Product saveProduct = productService.saveProduct(product);
         if(!ObjectUtils.isEmpty(saveProduct))
         {
@@ -207,15 +207,24 @@ public class AdminController {
 
     @PostMapping("/updateProduct")
     
-        public String updateProduct(@ModelAttribute Product product,@RequestParam("file") MultipartFile image,HttpSession session) throws IOException{
+        public String updateProduct(@ModelAttribute Product product,@RequestParam("file") MultipartFile image,HttpSession session,Model m) throws IOException{
 
-            Product updateProduct = productService.updateProduct(product, image);
-            if(!ObjectUtils.isEmpty(updateProduct))
+
+            if(product.getDiscount() <0 || product.getDiscount() >100)
             {
-                session.setAttribute("succMsg", "Product Update Successfully");
+                session.setAttribute("errorMsg", "Discount must be between 0 to 100");
+                
             }
             else{
-                session.setAttribute("errorMsg", "Something wrong on server");
+
+                Product updateProduct = productService.updateProduct(product, image);
+                if(!ObjectUtils.isEmpty(updateProduct))
+                {
+                    session.setAttribute("succMsg", "Product Update Successfully");
+                }
+                else{
+                    session.setAttribute("errorMsg", "Something wrong on server");
+                }
             }
             return "redirect:/admin/loadEditProduct/"+product.getId();
         }
