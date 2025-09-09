@@ -101,7 +101,7 @@ public class ProductServiceImpl implements ProductService {
     public List<Product> getAllActiveProducts(String category) 
     {
         List<Product> products= null;
-        if(ObjectUtils.isEmpty(products))
+        if(ObjectUtils.isEmpty(category))
         {
             products = productRepository.findByIsActiveTrue();
 
