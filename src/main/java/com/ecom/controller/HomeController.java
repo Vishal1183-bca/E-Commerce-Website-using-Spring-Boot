@@ -22,10 +22,10 @@ import org.springframework.web.multipart.MultipartFile;
 
 import com.ecom.model.Category;
 import com.ecom.model.Product;
-
+import com.ecom.model.UserDtls;
 import com.ecom.service.CategoryService;
 import com.ecom.service.ProductService;
-
+import com.ecom.service.UserService;
 
 import jakarta.servlet.http.HttpSession;
 
@@ -39,6 +39,8 @@ public class HomeController {
 	private ProductService productService;
 
 
+	@Autowired
+	private UserService userService;
 
 	@GetMapping("/")
 	public String index() {
@@ -73,5 +75,31 @@ public class HomeController {
 		return "view_product";
 	}
 
+
+	@PostMapping("/saveUser")
+	public String saveUser(@ModelAttribute UserDtls userDtls, @RequestParam("img") MultipartFile file,HttpSession session) throws IOException {
+		
+		String imageName = file.isEmpty() ? "default.jpg" : file.getOriginalFilename();
+
+		userDtls.setProfileImage(imageName);
+		UserDtls user = userService.saveUser(userDtls);
+		if(!ObjectUtils.isEmpty(user))
+		{
+			if (!file.isEmpty()) {
+			File saveFile = new ClassPathResource("static/img").getFile();
+			Path path = Paths.get(saveFile.getAbsolutePath() + File.separator + "profile_img" + File.separator + file.getOriginalFilename());
+			Files.copy(file.getInputStream(),path,StandardCopyOption.REPLACE_EXISTING);
+
+		}
+		session.setAttribute("succMsg","Register Sccessfully");
+	}
+		else{
+			session.setAttribute("errorMsg","Something wrong on server");
+		}
+		return "redirect:/register";
+
+
+		
+	}
 
 }
