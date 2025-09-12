@@ -17,6 +17,15 @@ public class UserDtls
     private String mobileNumber;
     private String email;
     private String city;
+    public String getRole() {
+        return role;
+    }
+
+    public void setRole(String role) {
+        this.role = role;
+    }
+
+    private String role;
     public Integer getId() {
         return id;
     }
@@ -95,7 +104,7 @@ public class UserDtls
    
     private String profileImage;
     public UserDtls(Integer id, String name, String mobileNumber, String email, String city, String state,
-            String address, String password, String profileImage) {
+            String address, String password, String profileImage,String role) {
         this.id = id;
         this.name = name;
         this.mobileNumber = mobileNumber;
@@ -105,6 +114,8 @@ public class UserDtls
         this.address = address;
         this.password = password;
         this.profileImage = profileImage;
+        this.role=role;
+
     }
     
 
@@ -115,7 +126,7 @@ public class UserDtls
     public String toString() {
         return "UserDtls [id=" + id + ", name=" + name + ", mobileNumber=" + mobileNumber + ", email=" + email
                 + ", city=" + city + ", state=" + state + ", address=" + address + ", password=" + password
-                + ", profileImage=" + profileImage + "]";
+                + ", profileImage=" + profileImage + ", role=" + role + "]";
     }
 
     
